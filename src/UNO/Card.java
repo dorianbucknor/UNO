@@ -42,6 +42,14 @@ public class Card extends JPanel {
      */
     private void createCardGFX() {
 
+        String labelText;
+
+        if (number == -1){
+            labelText = action;
+        }else{
+            labelText = Integer.toString(number);
+        }
+
         setPreferredSize(new Dimension(70,100));
         setSize(new Dimension(70,100));
         setMaximumSize(new Dimension(70,100));
@@ -49,13 +57,13 @@ public class Card extends JPanel {
         setVisible(true);
 
         JLabel numberLbl1 = new JLabel();
-        numberLbl1.setText(Integer.toString(number));
+        numberLbl1.setText(labelText);
         numberLbl1.setForeground(color);
         numberLbl1.setVisible(true);
 
 
         JLabel numberLbl2 = new JLabel();
-        numberLbl2.setText(Integer.toString(number));
+        numberLbl2.setText(labelText);
         numberLbl2.setForeground(color);
         numberLbl2.setVisible(true);
 
