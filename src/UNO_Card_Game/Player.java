@@ -16,7 +16,7 @@ public class Player extends JPanel {
     private JLabel playerNameTag = new JLabel();
     private JLabel cardCountLbl = new JLabel();
     private JLabel scoreLbl = new JLabel();
-    private JButton UNOBtn = new JButton("UNO_Card_Game");
+    private JButton UNOBtn = new JButton("UNO");
     private JButton drawBtn = new JButton("Draw Card");
     private JPanel cardHolder = new JPanel();
     protected ArrayList<Card> cards ;
@@ -100,7 +100,7 @@ public class Player extends JPanel {
         playerInfoBar.add(drawBtn);
 
         /**
-         * UNO_Card_Game Button
+         * UNO Button
          */
         UNOBtn.setForeground(Color.BLACK);
         UNOBtn.setEnabled(canUNO());

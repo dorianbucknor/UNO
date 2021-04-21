@@ -62,9 +62,9 @@ public class Card extends JPanel {
         /**
          *Card properties
          */
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        setPreferredSize(new Dimension(200,240));
-        setMaximumSize(new Dimension(200,240));
+        setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
+        setPreferredSize(new Dimension(200,180));
+        setMaximumSize(new Dimension(200,180));
         setBackground(Color.white);
         setLayout(new BorderLayout());
         setVisible(true);
@@ -97,7 +97,7 @@ public class Card extends JPanel {
          * UNO_Card_Game Label
          */
         JLabel unoLbl = new JLabel();
-        unoLbl.setText("UNO_Card_Game");
+        unoLbl.setText("UNO");
         unoLbl.setHorizontalAlignment(JLabel.CENTER);
         unoLbl.setLayout(new BorderLayout());
         unoLbl.setVisible(true);
