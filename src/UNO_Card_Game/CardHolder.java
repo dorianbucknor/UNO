@@ -5,16 +5,11 @@
  */
 
 
-package UNO;
-
-import org.w3c.dom.Text;
+package UNO_Card_Game;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class CardHolder extends JPanel  {
     protected ArrayList<Card> cards ;

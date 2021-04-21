@@ -1,4 +1,4 @@
-package UNO;
+package UNO_Card_Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,10 +94,10 @@ public class Card extends JPanel {
 
 
         /**
-         * UNO Label
+         * UNO_Card_Game Label
          */
         JLabel unoLbl = new JLabel();
-        unoLbl.setText("UNO");
+        unoLbl.setText("UNO_Card_Game");
         unoLbl.setHorizontalAlignment(JLabel.CENTER);
         unoLbl.setLayout(new BorderLayout());
         unoLbl.setVisible(true);
@@ -135,7 +135,7 @@ public class Card extends JPanel {
      * @see java.awt.event.ActionEvent ActionEvent e
      */
     private void playCard(ActionEvent e) {
-        if(UnoGame.getPlayedCards().peek().getColor() == this.color || UnoGame.getPlayedCards().peek().getNumber() == this.number){
+        if(UNO.getPlayedCards().peek().getColor() == this.color || UNO.getPlayedCards().peek().getNumber() == this.number){
 
         }else{
 

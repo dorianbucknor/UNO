@@ -1,4 +1,4 @@
-package UNO;
+package UNO_Card_Game;
 
 import java.awt.*;
 import java.util.*;

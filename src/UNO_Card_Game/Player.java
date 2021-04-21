@@ -1,4 +1,4 @@
-package UNO;
+package UNO_Card_Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class Player extends JPanel {
     private JLabel playerNameTag = new JLabel();
     private JLabel cardCountLbl = new JLabel();
     private JLabel scoreLbl = new JLabel();
-    private JButton UNOBtn = new JButton("UNO");
+    private JButton UNOBtn = new JButton("UNO_Card_Game");
     private JButton drawBtn = new JButton("Draw Card");
     private JPanel cardHolder = new JPanel();
     protected ArrayList<Card> cards ;
@@ -100,7 +100,7 @@ public class Player extends JPanel {
         playerInfoBar.add(drawBtn);
 
         /**
-         * UNO Button
+         * UNO_Card_Game Button
          */
         UNOBtn.setForeground(Color.BLACK);
         UNOBtn.setEnabled(canUNO());
@@ -128,8 +128,8 @@ public class Player extends JPanel {
    // }
 
     /**
-     * Checks if player can call UNO to win a round
-     * @return true if player can call UNO, false otherwise
+     * Checks if player can call UNO_Card_Game to win a round
+     * @return true if player can call UNO_Card_Game, false otherwise
      */
     public boolean canUNO(){
         return getNumberOfCards() == 1;
@@ -203,7 +203,7 @@ public class Player extends JPanel {
      * Draws a card from playing deck
      */
     public void drawCard(){
-        addCard(UnoGame.getPlayDeck().pop());
+        addCard(UNO.getPlayDeck().pop());
     }
 
     /**
@@ -290,7 +290,7 @@ public class Player extends JPanel {
     public void updatePlayerUI(){
         cardCountLbl.setText("# of Cards: " + numberOfCards);
         UNOBtn.setEnabled(canUNO());
-        drawBtn.setEnabled(!UnoGame.isStackEmpty());
+        drawBtn.setEnabled(!UNO.isStackEmpty());
         scoreLbl.setText("Score: " + score);
         playerNameTag.setText("Player: " + name);
         for (Card card :
