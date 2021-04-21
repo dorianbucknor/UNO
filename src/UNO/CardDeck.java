@@ -43,7 +43,7 @@ public class CardDeck {
 
         for (int i = 0; i < 4; i++) {
             fullDeck.put("Wild+4"+i, new Card(Color.black, "+4"));
-            fullDeck.put("WildChangeColor"+i ,new Card(Color.black, "wild-change-color"));
+            fullDeck.put("WildChangeColor"+i ,new Card(Color.black, "change-color"));
         }
     }
 

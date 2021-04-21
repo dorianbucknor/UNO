@@ -15,7 +15,7 @@ public class Player extends JPanel {
     Player(){
         name = null;
         cardHolder = null;
-        score = -1;
+        score = 0;
         playerColor = null;
         createPlayerGFX();
     }
@@ -36,20 +36,52 @@ public class Player extends JPanel {
      * Create UI for player
      */
     private void createPlayerGFX() {
-        setPreferredSize(new Dimension(490,140));
-        setMaximumSize(new Dimension(490,140));
+        setPreferredSize(new Dimension(200,260));
+        setMaximumSize(new Dimension(200,260));
         setVisible(true);
         setFocusable(false);
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(playerColor, 2, true));
 
+        JPanel playerInfoBar = new JPanel(new GridLayout(1, 5));
+        playerInfoBar.setVisible(true);
+        playerInfoBar.setPreferredSize(new Dimension(700,30));
+
+
         JLabel playerNameTag = new JLabel();
-        playerNameTag.setText(name);
+        playerNameTag.setText("Player: "+name);
         playerNameTag.setVisible(true);
-        playerNameTag.setPreferredSize(new Dimension(700,20));
         playerNameTag.setBorder(BorderFactory.createLineBorder(Color.GREEN,2, true));
 
-        add(playerNameTag, BorderLayout.SOUTH);
+        JLabel cardCountLbl = new JLabel();
+        cardCountLbl.setText("# of Cards: " + (cardHolder.getNumberOfCards() + 1));
+        cardCountLbl.setHorizontalTextPosition(JLabel.CENTER);
+        cardCountLbl.setForeground(Color.BLACK);
+        cardCountLbl.setVisible(true);
+
+        JLabel scoreLbl = new JLabel();
+        scoreLbl.setText("Score: "+score);
+        scoreLbl.setHorizontalTextPosition(JLabel.CENTER);
+        scoreLbl.setForeground(Color.BLACK);
+        scoreLbl.setVisible(true);
+
+        JButton drawBtn = new JButton("Draw Card");
+        drawBtn.setForeground(Color.BLACK);
+        drawBtn.setVisible(true);
+
+        JButton UNOBtn = new JButton("UNO");
+        UNOBtn.setForeground(Color.BLACK);
+        UNOBtn.setEnabled(canUNO());
+        UNOBtn.setVisible(true);
+
+        playerInfoBar.add(playerNameTag);
+        playerInfoBar.add(scoreLbl);
+        playerInfoBar.add(cardCountLbl);
+        playerInfoBar.add(drawBtn);
+        playerInfoBar.add(UNOBtn);
+
+
+        add(playerInfoBar, BorderLayout.SOUTH);
         add(cardHolder, BorderLayout.CENTER);
     }
 
@@ -59,6 +91,10 @@ public class Player extends JPanel {
      */
     public CardHolder getCardHolder() {
         return cardHolder;
+    }
+
+    public boolean canUNO(){
+        return cardHolder.getNumberOfCards() == 1;
     }
 
     /**

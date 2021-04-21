@@ -37,7 +37,6 @@ public class CardHolder extends JPanel  {
      */
     public void addCard(Card card){
         cards.add(card);
-        System.out.println("add");
         numberOfCards++;
         createCardHolderGFX();
     }
@@ -54,17 +53,19 @@ public class CardHolder extends JPanel  {
     /**
      * Finds a card by color and number
      * @param color color of card
-     * @see java.awt.Color for color
+     * @see java.awt.Color Color
      * @param number number value of card
      * @return index of card in list or -1 if card is not found
      */
     public int cardIndex(Color color, int number){
+        int indexOfCard = -1;
+
         for (int i = cards.size(); i > 0 ; i--) {
             if(cards.get(i).getNumber() == number && cards.get(i).getColor() == color ){
-                return i;
+                indexOfCard = i;
             }
         }
-        return -1;
+        return indexOfCard;
     }
 
     public ArrayList<Card> getCards() {
@@ -84,48 +85,31 @@ public class CardHolder extends JPanel  {
      * Removes a card by reference
      * @param queryCard card to remove
      */
-    public void removeCard(Card queryCard){
-        for (Card card:
+    public void removeCard(Card card){
+        for (Card c:
              cards) {
-            if(card.equals(queryCard)){
-                cards.remove(queryCard);
+            if(c.equals(card)){
+                cards.remove(card);
                 numberOfCards--;
                 break;
             }
         }
     }
 
+    public int getNumberOfCards() {
+        return numberOfCards;
+    }
+
     private void createCardHolderGFX() {
         System.out.println(cards.size()+"six");
 
         setPreferredSize(new Dimension(490,120));
-
-        setLayout(new BorderLayout());
+        setLayout(new GridLayout(1, numberOfCards ));
         setVisible(true);
-
-        JPanel cardPanel = new JPanel();
-        cardPanel.setLayout(new GridLayout(1, numberOfCards, 2, 1));
-        cardPanel.setPreferredSize(new Dimension(490,120));
-        cardPanel.setForeground(Color.BLACK);
-        cardPanel.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 2));
-        cardPanel.setVisible(true);
-
-        JLabel cardCountLbl = new JLabel();
-        cardCountLbl.setText(Integer.toString(numberOfCards+1));
-        cardCountLbl.setPreferredSize(new Dimension(490,20));
-        cardCountLbl.setHorizontalTextPosition(JLabel.CENTER);
-        cardCountLbl.setForeground(Color.BLACK);
-        cardCountLbl.setVisible(true);
-
 
         for (Card card :
                 cards) {
-            cardPanel.add(card);
+            add(card);
         }
-
-        add(cardPanel, BorderLayout.CENTER);
-        add(cardCountLbl, BorderLayout.NORTH);
     }
-
-
 }

@@ -23,9 +23,6 @@ public class UnoGame extends JFrame {
         setLayout(new BorderLayout());
         setTitle("UNO | Online");
 
-
-
-
         JPanel boardCentre = new JPanel(new BorderLayout());
         JLabel title = new JLabel("UNO");
         boardCentre.add( title, BorderLayout.CENTER);
@@ -48,12 +45,12 @@ public class UnoGame extends JFrame {
         }
         else if (player2 == null) {
             player2 = player;
-            board.add(player2, BorderLayout.WEST);
+            board.add(player2, BorderLayout.NORTH);
             numberOfPlayers++;
             players.add(player2);
             refresh();
         }
-        else if (player3 == null) {
+        /*else if (player3 == null) {
             player3 = player;
             board.add(player3, BorderLayout.NORTH);
             numberOfPlayers++;
@@ -67,7 +64,7 @@ public class UnoGame extends JFrame {
             System.out.println(numberOfPlayers);
             players.add(player4);
             refresh();
-        }
+        }*/
         //add(new JOptionPane("Game is full!", JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION));
         refresh();
     }
@@ -87,9 +84,9 @@ public class UnoGame extends JFrame {
         for (int i = 0; i < numberOfPlayers; i++) {
             for (int j = 0; j < 7; j++) {
                 players.get(i).getCardHolder().addCard(playDeck.pop());
+                refresh();
             }
         }
-        refresh();
     }
 
     public Player getPlayer1() {

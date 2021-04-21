@@ -16,9 +16,5 @@ public class Main extends JFrame{
         UNO.run();
         UNO.start();
 
-        for (Card card:
-             UNO.getPlayer4().getCardHolder().getCards()) {
-            System.out.println(card.getNumber());
-        }
     }
 }
