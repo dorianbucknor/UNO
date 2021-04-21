@@ -5,8 +5,13 @@ import java.util.*;
 import java.util.List;
 
 public class CardDeck {
+
     private static HashMap<String, Card> fullDeck = new HashMap<>(108);
 
+    /**
+     * Create cards and add to deck
+     * @// TODO: 4/21/2021 type out all cards individually to reduce complexity "maybe"
+     */
     CardDeck(){
         for (int i = 1; i < 10; i++) {
             fullDeck.put("Red"+i+"-1", new Card(Color.red, i));
@@ -70,6 +75,12 @@ public class CardDeck {
         shuffledCards.addAll(allCards);
         return shuffledCards;
     }
+
+    /**
+     * @return full deck of cards
+     * @// TODO: 4/21/2021 remove if not used or not needed
+     * @see java.util.HashMap Hashmap
+     */
     public HashMap getFullDeck() {
         return fullDeck;
     }
