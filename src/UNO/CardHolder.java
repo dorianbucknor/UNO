@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class CardHolder extends JPanel  {
-    private ArrayList<Card> cards ;
-    private int numberOfCards;
+    protected ArrayList<Card> cards ;
+    protected int numberOfCards;
 
     /**
      * Default constructor
@@ -38,6 +38,7 @@ public class CardHolder extends JPanel  {
     public void addCard(Card card){
         cards.add(card);
         numberOfCards++;
+
         createCardHolderGFX();
     }
 
@@ -101,11 +102,12 @@ public class CardHolder extends JPanel  {
     }
 
     private void createCardHolderGFX() {
-        System.out.println(cards.size()+"six");
+        System.out.println(cards.size());
 
         setPreferredSize(new Dimension(490,120));
         setLayout(new GridLayout(1, numberOfCards ));
         setVisible(true);
+        setName("cardHolder");
 
         for (Card card :
                 cards) {

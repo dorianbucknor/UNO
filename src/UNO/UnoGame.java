@@ -13,6 +13,7 @@ public class UnoGame extends JFrame {
     private Player player4;
     private ArrayList<Player> players = new ArrayList<>(4);
     private int numberOfPlayers = 0;
+    private static int cardStackCount;
    private JPanel board = new JPanel(new BorderLayout());
     public void run(){
         setLocationRelativeTo(null);
@@ -78,15 +79,29 @@ public class UnoGame extends JFrame {
         repaint();
     }
 
+    public static boolean isStackEmpty(){
+        return cardStackCount == 0;
+    }
+
     public void shuffleShareCards() {
         Stack<Card> playDeck = new CardDeck().createPlayDeck();
 
         for (int i = 0; i < numberOfPlayers; i++) {
             for (int j = 0; j < 7; j++) {
-                players.get(i).getCardHolder().addCard(playDeck.pop());
+                players.get(i).addCard(playDeck.pop());
                 refresh();
             }
         }
+        //cardStackCount = playDeck.size();
+        cardStackCount = 1;
+    }
+
+    public static int getCardStackCount() {
+        return cardStackCount;
+    }
+
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
     }
 
     public Player getPlayer1() {

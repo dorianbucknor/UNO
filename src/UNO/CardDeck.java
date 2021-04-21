@@ -63,7 +63,7 @@ public class CardDeck {
      * @return Stack of shuffled cards
      * @see java.util.Stack Stack
      */
-    public Stack shuffleCards( List<Card> cards) {
+    public Stack<Card> shuffleCards( List<Card> cards) {
         Stack<Card> shuffledCards = new Stack<>();
         List<Card> allCards = cards;
         Collections.shuffle(allCards);
