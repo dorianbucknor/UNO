@@ -23,6 +23,7 @@ public class Player extends JPanel {
     protected int numberOfCards;
 
     /**
+     * Creates a new player
      * @param name name of player
      * @param playerColor player color
      */
@@ -39,30 +40,49 @@ public class Player extends JPanel {
      * Create UI for player
      */
     private void createPlayerGFX() {
-        setPreferredSize(new Dimension(200,260));
-        setMaximumSize(new Dimension(200,260));
+        /**
+         * Player panel properties
+         */
         setVisible(true);
         setFocusable(false);
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(playerColor, 2, true));
 
+        /**
+         * Player info
+         */
         playerInfoBar.setVisible(true);
         playerInfoBar.setPreferredSize(new Dimension(700,30));
 
+        /**
+         * Player name
+         */
         playerNameTag.setText("Player: " + name);
         playerNameTag.setVisible(true);
         playerNameTag.setBorder(BorderFactory.createLineBorder(Color.GREEN,2, true));
+        playerInfoBar.add(playerNameTag);
 
+        /**
+         * Card count
+         */
         cardCountLbl.setText("# of Cards: " + (numberOfCards));
         cardCountLbl.setHorizontalTextPosition(JLabel.CENTER);
         cardCountLbl.setForeground(Color.BLACK);
         cardCountLbl.setVisible(true);
+        playerInfoBar.add(cardCountLbl);
 
+        /**
+         * Player score
+         */
         scoreLbl.setText("Score: " + score);
         scoreLbl.setHorizontalTextPosition(JLabel.CENTER);
         scoreLbl.setForeground(Color.BLACK);
         scoreLbl.setVisible(true);
+        playerInfoBar.add(scoreLbl);
 
+        /**
+         * Draw button
+         */
         drawBtn.setForeground(Color.BLACK);
         drawBtn.setVisible(true);
         drawBtn.setEnabled(false);
@@ -77,42 +97,45 @@ public class Player extends JPanel {
                 }
             }
         });
+        playerInfoBar.add(drawBtn);
 
+        /**
+         * UNO Button
+         */
         UNOBtn.setForeground(Color.BLACK);
         UNOBtn.setEnabled(canUNO());
         UNOBtn.setVisible(true);
+        playerInfoBar.add(UNOBtn);
 
+        /**
+         * displays player cards
+         */
         cardHolder.setPreferredSize(new Dimension(490,120));
         cardHolder.setLayout(new GridLayout(1, 7 ));
         cardHolder.setVisible(true);
         cardHolder.setName("cardHolder");
 
         add(cardHolder, BorderLayout.CENTER);
-
-        playerInfoBar.add(playerNameTag);
-        playerInfoBar.add(scoreLbl);
-        playerInfoBar.add(cardCountLbl);
-        playerInfoBar.add(drawBtn);
-        playerInfoBar.add(UNOBtn);
-
         add(playerInfoBar, BorderLayout.SOUTH);
-        //add(, BorderLayout.CENTER);
     }
 
     /**
-     *
+     * @// TODO: 4/21/2021 revise cardholder options !!!
      * @return card holder containing all cards player has
      */
   //  public CardHolder getCardHolder() {
   //      return cardHolder;
    // }
 
+    /**
+     * Checks if player can call UNO to win a round
+     * @return true if player can call UNO, false otherwise
+     */
     public boolean canUNO(){
         return getNumberOfCards() == 1;
     }
 
     /**
-     *
      * @return player's score
      */
     public int getScore() {
@@ -120,7 +143,6 @@ public class Player extends JPanel {
     }
 
     /**
-     *
      * @return player's name
      */
     public String getName() {
@@ -128,7 +150,6 @@ public class Player extends JPanel {
     }
 
     /**
-     *
      * @return player's color
      */
     public Color getPlayerColor() {
@@ -136,7 +157,7 @@ public class Player extends JPanel {
     }
 
     /**
-     *
+     * @// TODO: 4/21/2021 Revise cardholder options!!!
      * @param cardHolder set the player's hand
      */
     //public void setCardHolder(CardHolder cardHolder) {
@@ -144,15 +165,16 @@ public class Player extends JPanel {
    // }
 
     /**
-     *
+     *Update player name
      * @param name set player name
      */
     public void setName(String name) {
-        this.name = name;updatePlayerUI();
+        this.name = name;
+        updatePlayerUI();
     }
 
     /**
-     *
+     *Update player score
      * @param score set player score
      */
     public void setScore(int score) {
@@ -161,11 +183,12 @@ public class Player extends JPanel {
     }
 
     /**
-     *
+     *Change player color
      * @param playerColor set player color
      */
     public void setPlayerColor(Color playerColor) {
         this.playerColor = playerColor;
+        updatePlayerUI();
     }
 
     /**
@@ -176,11 +199,17 @@ public class Player extends JPanel {
         updatePlayerUI();
     }
 
+    /**
+     * Draws a card from playing deck
+     */
     public void drawCard(){
         addCard(UnoGame.getPlayDeck().pop());
-        System.out.println("draw");
     }
 
+    /**
+     *Adds a card to player's list of cards
+     * @param card card to add
+     */
     public void addCard(Card card){
         cards.add(card);
         numberOfCards++;
@@ -215,6 +244,10 @@ public class Player extends JPanel {
         return indexOfCard;
     }
 
+    /**
+     * @return list of cards that player has
+     * @see java.util.ArrayList ArrayList
+     */
     public ArrayList<Card> getCards() {
         return cards;
     }
@@ -244,9 +277,16 @@ public class Player extends JPanel {
         }
     }
 
+    /**
+     * @return number of card player currently has
+     */
     public int getNumberOfCards() {
         return numberOfCards;
     }
+
+    /**
+     * Updates player UI
+     */
     public void updatePlayerUI(){
         cardCountLbl.setText("# of Cards: " + numberOfCards);
         UNOBtn.setEnabled(canUNO());
