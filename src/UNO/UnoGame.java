@@ -1,6 +1,7 @@
 package UNO;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
@@ -13,7 +14,11 @@ public class UnoGame extends JFrame {
     private Player player4;
     private ArrayList<Player> players = new ArrayList<>(4);
     private int numberOfPlayers = 0;
+    private Card playedCard=new Card();
     private static int cardStackCount;
+    private static Stack<Card> playDeck;
+    private static Stack<Card> playedCards = new Stack<>();
+
    private JPanel board = new JPanel(new BorderLayout());
     public void run(){
         setLocationRelativeTo(null);
@@ -32,7 +37,9 @@ public class UnoGame extends JFrame {
         title.setFont(new Font( "Backslash", Font.BOLD, 48));
         title.setVisible(true);
         title.setHorizontalAlignment(JLabel.CENTER);
+
         board.add(boardCentre, BorderLayout.CENTER);
+
         add(board);
     }
 
@@ -72,6 +79,17 @@ public class UnoGame extends JFrame {
 
     public void start(){
         shuffleShareCards();
+        playedCards.push(playDeck.pop());
+        updateBoard();
+        updatePlayedCard();
+    }
+
+    private void updateBoard(){
+    }
+    private void updatePlayedCard(){
+        playedCard = playedCards.peek();
+        playedCard.setBounds(-100, 0, 100, 180);
+        board.add(playedCard, BorderLayout.EAST);
     }
 
     public void refresh(){
@@ -80,11 +98,11 @@ public class UnoGame extends JFrame {
     }
 
     public static boolean isStackEmpty(){
-        return cardStackCount == 0;
+        return playDeck.isEmpty();
     }
 
     public void shuffleShareCards() {
-        Stack<Card> playDeck = new CardDeck().createPlayDeck();
+        playDeck = new CardDeck().createPlayDeck();
 
         for (int i = 0; i < numberOfPlayers; i++) {
             for (int j = 0; j < 7; j++) {
@@ -92,8 +110,10 @@ public class UnoGame extends JFrame {
                 refresh();
             }
         }
-        //cardStackCount = playDeck.size();
-        cardStackCount = 1;
+    }
+
+    public static Stack<Card> getPlayDeck() {
+        return playDeck;
     }
 
     public static int getCardStackCount() {

@@ -2,7 +2,10 @@ package UNO;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 
 public class Player extends JPanel {
     private int score;
@@ -62,7 +65,18 @@ public class Player extends JPanel {
 
         drawBtn.setForeground(Color.BLACK);
         drawBtn.setVisible(true);
-        drawBtn.setEnabled(!UnoGame.isStackEmpty());
+        drawBtn.setEnabled(false);
+        drawBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    drawCard();
+                } catch (EmptyStackException ex) {
+                    ex.printStackTrace();
+                    drawBtn.setEnabled(false);
+                }
+            }
+        });
 
         UNOBtn.setForeground(Color.BLACK);
         UNOBtn.setEnabled(canUNO());
@@ -134,7 +148,7 @@ public class Player extends JPanel {
      * @param name set player name
      */
     public void setName(String name) {
-        this.name = name;
+        this.name = name;updatePlayerUI();
     }
 
     /**
@@ -143,6 +157,7 @@ public class Player extends JPanel {
      */
     public void setScore(int score) {
         this.score = score;
+        updatePlayerUI();
     }
 
     /**
@@ -158,6 +173,12 @@ public class Player extends JPanel {
      */
     public void incrementScore(){
         score += 1;
+        updatePlayerUI();
+    }
+
+    public void drawCard(){
+        addCard(UnoGame.getPlayDeck().pop());
+        System.out.println("draw");
     }
 
     public void addCard(Card card){
@@ -173,6 +194,7 @@ public class Player extends JPanel {
     public void removeCard(int cardIndex){
         cards.remove(cardIndex);
         numberOfCards--;
+        updatePlayerUI();
     }
 
     /**
@@ -216,6 +238,7 @@ public class Player extends JPanel {
             if(c.equals(card)){
                 cards.remove(card);
                 numberOfCards--;
+                updatePlayerUI();
                 break;
             }
         }

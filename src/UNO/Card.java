@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.EmptyStackException;
 import java.util.Objects;
 
 public class Card extends JPanel {
@@ -50,8 +53,8 @@ public class Card extends JPanel {
             labelText = Integer.toString(number);
         }
 
-        setPreferredSize(new Dimension(10,180));
-        setMaximumSize(new Dimension(10,180));
+        setPreferredSize(new Dimension(100,180));
+        setMaximumSize(new Dimension(100,180));
         setBackground(Color.white);
         setVisible(true);
 
@@ -76,12 +79,32 @@ public class Card extends JPanel {
         unoLbl.setHorizontalAlignment(JLabel.CENTER);
         unoLbl.setVisible(true);
 
+        JButton playCard = new JButton("Play Card");
+        playCard.setForeground(Color.BLACK);
+        playCard.setVisible(true);
+        playCard.setEnabled(false);
+        playCard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    playCard(e);
+                } catch (EmptyStackException ex) {
+                    ex.printStackTrace();
+                    playCard.setEnabled(false);
+                }
+            }
+        });
+
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         add(cardLbl1, BorderLayout.NORTH);
         add(unoLbl,BorderLayout.CENTER);
         add(cardLbl2,BorderLayout.SOUTH);
+
+    }
+
+    private void playCard(ActionEvent e) {
 
     }
 
