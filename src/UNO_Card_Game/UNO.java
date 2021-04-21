@@ -3,6 +3,7 @@ package UNO_Card_Game;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 
 /**
@@ -27,7 +28,8 @@ public class UNO {
 
     private static JPanel board = new JPanel(new BorderLayout());
     private static JPanel boardCentre = new JPanel(new BorderLayout());
-    private static JFrame frame = new JFrame("UNO_Card_Game | OFFLINE");
+    private static JFrame frame = new JFrame("UNO Card Game | OFFLINE");
+    private static JPanel playedCardSection = new JPanel();
 
     private static UNO instance;
 
@@ -50,27 +52,47 @@ public class UNO {
      * Run game
      */
     public static void run(){
-        createBoard();
+        createBoardGFX();
     }
 
     /**
      * Create Board GUI
      */
-    private static void createBoard(){
+    private static void createBoardGFX(){
+        /**
+         * Frame properties
+         */
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setSize(1200, 700);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout());
 
+        /**
+         * playdeck properties
+         *
+         */
+        JLabel playDeckRem = new JLabel("Playing Deck - Cards Remaining: 93");
+        playDeckRem.setHorizontalAlignment(JLabel.CENTER);
+        board.add(playDeckRem, BorderLayout.WEST);
+
+        /**
+         * board title
+         */
         JLabel title = new JLabel("UNO_Card_Game");
-        boardCentre.add( title, BorderLayout.CENTER);
-        boardCentre.setSize(new Dimension(200, 200));
-        boardCentre.setVisible(true);
         title.setFont(new Font( "Backslash", Font.BOLD, 48));
         title.setVisible(true);
         title.setHorizontalAlignment(JLabel.CENTER);
+
+        boardCentre.add( title, BorderLayout.CENTER);
+        boardCentre.setSize(new Dimension(200, 200));
+        boardCentre.setVisible(true);
+
+        playedCardSection.setPreferredSize(new Dimension(400, 300));
+        playedCardSection.setVisible(true);
+        boardCentre.add(playedCardSection, BorderLayout.EAST);
 
         board.add(boardCentre, BorderLayout.CENTER);
 
@@ -119,7 +141,7 @@ public class UNO {
      * Starts game
      */
     public static void start(){
-        shuffleShareCards();
+        shuffleShareCards(7);
         playedCards.push(playDeck.pop());
         updateBoard();
         updatePlayedCard();
@@ -127,9 +149,16 @@ public class UNO {
 
     /**
      * Update board GUI
-     * @// TODO: 4/21/2021 Implement
+     * @TODO: 4/21/2021 Implement
      */
     private static void updateBoard(){
+    }
+
+    /**
+     * Shuffles play deck
+     */
+    public static void shufflePlayDeck(){
+        Collections.shuffle(playDeck);
     }
 
     /**
@@ -137,8 +166,8 @@ public class UNO {
      */
     private static void updatePlayedCard(){
         playedCard = playedCards.peek();
-        playedCard.setBounds(-100, 0, 100, 180);
-        boardCentre.add(playedCard, BorderLayout.EAST);
+        playedCard.setCanPlay(false);
+        playedCardSection.add(playedCard);
     }
 
     /**
@@ -159,12 +188,13 @@ public class UNO {
     /**
      * Shuffle cards and share equally to players
      */
-    public static void shuffleShareCards() {
+    public static void shuffleShareCards(int cardsPerPlayer) {
         playDeck = new CardDeck().createPlayDeck();
-
         for (int i = 0; i < numberOfPlayers; i++) {
             for (int j = 0; j < 7; j++) {
-                players.get(i).addCard(playDeck.pop());
+                Card newCard = playDeck.pop();
+                newCard.setPlayer(players.get(i));
+                players.get(i).addCard(newCard);
                 refresh();
             }
         }
@@ -254,5 +284,10 @@ public class UNO {
      */
     public static ArrayList<Player> getPlayers() {
         return players;
+    }
+
+    public static void winRound(Player player){
+        player.incrementScore();
+        frame.add(new JOptionPane(player.getName() + " won the round!", JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION));
     }
 }

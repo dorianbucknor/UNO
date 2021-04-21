@@ -105,6 +105,9 @@ public class Player extends JPanel {
         UNOBtn.setForeground(Color.BLACK);
         UNOBtn.setEnabled(canUNO());
         UNOBtn.setVisible(true);
+        UNOBtn.addActionListener( (e) -> {
+                UNO.winRound(this);
+        });
         playerInfoBar.add(UNOBtn);
 
         /**
@@ -203,7 +206,9 @@ public class Player extends JPanel {
      * Draws a card from playing deck
      */
     public void drawCard(){
-        addCard(UNO.getPlayDeck().pop());
+        Card newCard = UNO.getPlayDeck().pop();
+        newCard.setPlayer(this);
+        addCard(newCard);
     }
 
     /**
@@ -269,7 +274,8 @@ public class Player extends JPanel {
         for (Card c:
                 cards) {
             if(c.equals(card)){
-                cards.remove(card);
+                System.out.println(cards.remove(card));
+                cardHolder.remove(card);
                 numberOfCards--;
                 updatePlayerUI();
                 break;
@@ -297,6 +303,7 @@ public class Player extends JPanel {
                 cards) {
             cardHolder.add(card);
         }
+        UNO.refresh();
     }
 }
 

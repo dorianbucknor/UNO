@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Objects;
 
@@ -12,6 +15,8 @@ public class Card extends JPanel {
     private int number;
     private String action;
     private boolean isActionCard = false;
+    private boolean canPlay = false;
+    private Player player;
 
     /**
      * Default Constructor
@@ -63,7 +68,7 @@ public class Card extends JPanel {
          *Card properties
          */
         setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
-        setPreferredSize(new Dimension(200,180));
+        setPreferredSize(new Dimension(240,300));
         setMaximumSize(new Dimension(200,180));
         setBackground(Color.white);
         setLayout(new BorderLayout());
@@ -105,28 +110,27 @@ public class Card extends JPanel {
         /**
          * Card play button
          */
-        JButton playCard = new JButton("Play Card");
-        playCard.setForeground(Color.BLACK);
-        playCard.setVisible(true);
-        playCard.setEnabled(false);
+        JButton playCardBtn = new JButton("Play Card");
+        playCardBtn.setForeground(Color.BLACK);
+        playCardBtn.setVisible(true);
         add(unoLbl,BorderLayout.CENTER);
 
         /**
          * Adds action listener to button to listen for button click
          * @see java.awt.event.ActionListener ActionListener
          */
-        playCard.addActionListener(new ActionListener() {
+        playCardBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     playCard(e);
                 } catch (EmptyStackException ex) {
                     ex.printStackTrace();
-                    playCard.setEnabled(false);
+                    playCardBtn.setEnabled(false);
                 }
             }
         });
-        unoLbl.add(playCard, BorderLayout.SOUTH);
+        unoLbl.add(playCardBtn, BorderLayout.SOUTH);
     }
 
     /**
@@ -135,10 +139,9 @@ public class Card extends JPanel {
      * @see java.awt.event.ActionEvent ActionEvent e
      */
     private void playCard(ActionEvent e) {
-        if(UNO.getPlayedCards().peek().getColor() == this.color || UNO.getPlayedCards().peek().getNumber() == this.number){
-
-        }else{
-
+        if (player == null) return;
+        if (UNO.getPlayedCards().peek().getColor() == this.color || UNO.getPlayedCards().peek().getNumber() == this.number) {
+            player.removeCard(this);
         }
     }
 
@@ -154,6 +157,14 @@ public class Card extends JPanel {
      */
     public Color getColor() {
         return color;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     /**
@@ -183,6 +194,14 @@ public class Card extends JPanel {
      */
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    /**
+     *
+     * @param canPlay
+     */
+    public void setCanPlay(boolean canPlay) {
+        this.canPlay = canPlay;
     }
 
     /**
