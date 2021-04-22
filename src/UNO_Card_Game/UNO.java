@@ -20,19 +20,19 @@ public class UNO {
     private static Player player2;
 //    private static Player player3;
 //    private static Player player4;
-    final private static ArrayList<Player> players = new ArrayList<>(4);
+     private static ArrayList<Player> players = new ArrayList<>(4);
     private static int numberOfPlayers = 0;
     private static Card playedCard = new Card();
     private static int cardStackCount;
     private static Stack<Card> playDeck = null;
     private static Stack<Card> playedCards = new Stack<>();
 
-    final private static JPanel board = new JPanel(new BorderLayout());
-    final private static JPanel boardCentre = new JPanel(new BorderLayout());
-    final private static JFrame frame = new JFrame("UNO Card Game | OFFLINE");
-    final private static JPanel playedCardSection = new JPanel();
+     private static JPanel board = new JPanel(new BorderLayout());
+     private static JPanel boardCentre = new JPanel(new BorderLayout());
+     private static JFrame frame = new JFrame("UNO Card Game | OFFLINE");
+    private static JPanel playedCardSection = new JPanel(new BorderLayout());
     private static Player nextPlayer;
-    private static JLabel playDeckRem = new JLabel();
+    private static final JLabel playDeckRem = new JLabel();
 
     private static UNO instance;
 
@@ -92,7 +92,7 @@ public class UNO {
         boardCentre.setSize(new Dimension(200, 200));
         boardCentre.setVisible(true);
 
-        playedCardSection.setPreferredSize(new Dimension(400, 300));
+        playedCardSection.setPreferredSize(new Dimension(180, 200));
         playedCardSection.setVisible(true);
         boardCentre.add(playedCardSection, BorderLayout.EAST);
 
@@ -171,16 +171,19 @@ public class UNO {
      * Update last played card
      */
     private static void updatePlayedCard(){
+        playedCardSection.removeAll();
         playedCard = playedCards.peek();
         playedCard.setCanPlay(false);
-        playedCardSection.add(playedCard);
+        playedCardSection.add(playedCard, BorderLayout.CENTER);
+        playedCardSection.validate();
+        playedCardSection.repaint();
     }
 
     /**
      * Refresh game UI
      */
     public static void refresh(){
-        frame.revalidate();
+        frame.validate();
         frame.repaint();
     }
 
@@ -314,9 +317,6 @@ public class UNO {
         nextPlayer = player;
         playedCards.add(card);
         playedCardSection.remove(playedCard);
-
-
-
         updateBoard();
         updatePlayedCard();
     }
@@ -340,6 +340,8 @@ public class UNO {
         for (Player player:
              players) {
             player.getCards().clear();
+            player.getCardHolder().removeAll();
+            //player.updatePlayerUI();
         }
         start();
     }

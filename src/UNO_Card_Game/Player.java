@@ -106,8 +106,8 @@ public class Player extends JPanel {
         /**
          * displays player cards
          */
-        cardHolder.setPreferredSize(new Dimension(490,120));
-        cardHolder.setLayout(new GridLayout(1, 7 ));
+        cardHolder.setPreferredSize(new Dimension(490,180));
+        cardHolder.setLayout(new GridLayout());
         cardHolder.setVisible(true);
         cardHolder.setName("cardHolder");
 
@@ -119,9 +119,13 @@ public class Player extends JPanel {
      * @// TODO: 4/21/2021 revise cardholder options !!!
      * @return card holder containing all cards player has
      */
-  //  public CardHolder getCardHolder() {
-  //      return cardHolder;
-   // }
+//     public CardHolder getCardHolder() {
+//        return cardHolder;
+//     }
+
+    public JPanel getCardHolder() {
+        return cardHolder;
+    }
 
     /**
      * Checks if player can call UNO_Card_Game to win a round
@@ -212,6 +216,7 @@ public class Player extends JPanel {
     public void addCard(Card card){
         cards.add(card);
         numberOfCards++;
+        cardHolder.removeAll();
         updatePlayerUI();
     }
 
@@ -264,17 +269,20 @@ public class Player extends JPanel {
      * Removes a card by reference
      * @param card card to remove
      */
-    public void removeCard(Card card){
-        for (Card c:
+    public void removeCard(Card card) {
+        cardHolder.removeAll();
+       // cardHolder.validate();
+
+        for (Card c :
                 cards) {
-            if(c.equals(card)){
-                System.out.println(cards.remove(card));
-                cardHolder.remove(card);
-                numberOfCards--;
-                updatePlayerUI();
+            if (c.equals(card)) {
+                cards.remove(c);
                 break;
             }
         }
+
+        numberOfCards--;
+       updatePlayerUI();
     }
 
     /**
@@ -288,16 +296,26 @@ public class Player extends JPanel {
      * Updates player UI
      */
     public void updatePlayerUI(){
+        updateCardHolder();
+
         cardCountLbl.setText("# of Cards: " + numberOfCards);
         UNOBtn.setEnabled(canUNO());
         drawBtn.setEnabled(!UNO.isStackEmpty());
         scoreLbl.setText("Score: " + score);
         playerNameTag.setText("Player: " + name);
+
+        revalidate();
+        repaint();
+        UNO.refresh();
+    }
+    public void updateCardHolder(){
         for (Card card :
                 cards) {
             cardHolder.add(card);
+            cardHolder.validate();
+            cardHolder.repaint();
         }
-        UNO.refresh();
+
     }
 }
 

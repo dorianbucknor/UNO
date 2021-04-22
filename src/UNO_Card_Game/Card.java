@@ -2,8 +2,6 @@ package UNO_Card_Game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.EmptyStackException;
 import java.util.Objects;
 
@@ -62,7 +60,7 @@ public class Card extends JPanel {
 
         String labelText;
 
-        if (isActionCard){
+        if (isActionCard || isWildCard){
             labelText = action;
         }else{
             labelText = Integer.toString(number);
@@ -72,8 +70,8 @@ public class Card extends JPanel {
          *Card properties
          */
         setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
-        setPreferredSize(new Dimension(240,300));
-        setMaximumSize(new Dimension(200,180));
+        setPreferredSize(new Dimension(180,200));
+        setMaximumSize(new Dimension(180,200));
         setBackground(Color.white);
         setLayout(new BorderLayout());
         setVisible(true);
@@ -125,7 +123,7 @@ public class Card extends JPanel {
          */
         playCardBtn.addActionListener(e -> {
             try {
-                playCard(e);
+                playCard();
             } catch (EmptyStackException ex) {
                 ex.printStackTrace();
                 playCardBtn.setEnabled(false);
@@ -136,10 +134,8 @@ public class Card extends JPanel {
 
     /**
      * Plays the card and removes card from player's hand
-     * @param e Action Event from button
-     * @see java.awt.event.ActionEvent ActionEvent e
      */
-    private void playCard(ActionEvent e) {
+    private void playCard() {
         if (player == null) return;
         if (UNO.getPlayedCards().peek().getColor() == this.color || UNO.getPlayedCards().peek().getNumber() == this.number || isActionCard) {
             UNO.makePlay(player, this);
@@ -215,11 +211,11 @@ public class Card extends JPanel {
         if (this == o) return true;
         if (!(o instanceof Card)) return false;
         Card card = (Card) o;
-        return getNumber() == card.getNumber() && getColor().equals(card.getColor());
+        return getNumber() == card.getNumber() && isActionCard == card.isActionCard && isWildCard == card.isWildCard && canPlay == card.canPlay && getColor().equals(card.getColor()) && getAction().equals(card.getAction()) && getPlayer().equals(card.getPlayer());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getColor(), getNumber());
+        return Objects.hash(getColor(), getNumber(), getAction(), isActionCard, isWildCard, canPlay, getPlayer());
     }
 }
