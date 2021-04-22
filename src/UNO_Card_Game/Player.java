@@ -128,8 +128,8 @@ public class Player extends JPanel {
     }
 
     /**
-     * Checks if player can call UNO_Card_Game to win a round
-     * @return true if player can call UNO_Card_Game, false otherwise
+     * Checks if player can call UNO to win a round
+     * @return true if player can call UNO, false otherwise
      */
     public boolean canUNO(){
         return getNumberOfCards() == 1;
@@ -157,7 +157,7 @@ public class Player extends JPanel {
     }
 
     /**
-     * @// TODO: 4/21/2021 Revise cardholder options!!!
+     * @ TODO: 4/21/2021 Revise cardholder options!!!
      * @param cardHolder set the player's hand
      */
     //public void setCardHolder(CardHolder cardHolder) {
