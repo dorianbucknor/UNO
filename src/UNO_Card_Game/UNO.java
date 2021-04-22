@@ -155,7 +155,8 @@ public class UNO {
      * @ TODO: 4/21/2021 Implement
      */
     public static void updateBoard(){
-
+        //nextPlayer = players.
+        cardStackCount = playDeck.size();
         playDeckRem.setText("Playing Deck - Cards Remaining: " + cardStackCount) ;
     }
 
