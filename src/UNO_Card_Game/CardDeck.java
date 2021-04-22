@@ -6,11 +6,11 @@ import java.util.List;
 
 public class CardDeck {
 
-    private static HashMap<String, Card> fullDeck = new HashMap<>(108);
+    final private static HashMap<String, Card> fullDeck = new HashMap<>(108);
 
     /**
      * Create cards and add to deck
-     * @// TODO: 4/21/2021 type out all cards individually to reduce complexity "maybe"
+     * @ TODO: 4/21/2021 type out all cards individually to reduce complexity "maybe"
      */
     CardDeck(){
         for (int i = 1; i < 10; i++) {
@@ -58,7 +58,7 @@ public class CardDeck {
      * @see java.util.Stack Stack
      */
     public Stack<Card> createPlayDeck(){
-        ArrayList<Card> playDeck = new ArrayList<Card>(fullDeck.values());
+        ArrayList<Card> playDeck = new ArrayList<>(fullDeck.values());
         return shuffleCards( playDeck);
     }
 
@@ -70,18 +70,17 @@ public class CardDeck {
      */
     public Stack<Card> shuffleCards( List<Card> cards) {
         Stack<Card> shuffledCards = new Stack<>();
-        List<Card> allCards = cards;
-        Collections.shuffle(allCards);
-        shuffledCards.addAll(allCards);
+        shuffledCards.addAll(cards);
+        Collections.shuffle(shuffledCards);
         return shuffledCards;
     }
 
     /**
      * @return full deck of cards
-     * @// TODO: 4/21/2021 remove if not used or not needed
+     * @ TODO: 4/21/2021 remove if not used or not needed
      * @see java.util.HashMap Hashmap
      */
-    public HashMap getFullDeck() {
+    public HashMap<String, Card> getFullDeck() {
         return fullDeck;
     }
 }

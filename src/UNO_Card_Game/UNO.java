@@ -2,12 +2,13 @@ package UNO_Card_Game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
 /**
- * @// TODO: 4/21/2021 Revise 4 player options
+ * @ TODO: 4/21/2021 Revise 4 player options
  */
 
 /**
@@ -19,17 +20,19 @@ public class UNO {
     private static Player player2;
 //    private static Player player3;
 //    private static Player player4;
-    private static ArrayList<Player> players = new ArrayList<>(4);
+    final private static ArrayList<Player> players = new ArrayList<>(4);
     private static int numberOfPlayers = 0;
-    private static Card playedCard=new Card();
+    private static Card playedCard = new Card();
     private static int cardStackCount;
-    private static Stack<Card> playDeck;
+    private static Stack<Card> playDeck = null;
     private static Stack<Card> playedCards = new Stack<>();
 
-    private static JPanel board = new JPanel(new BorderLayout());
-    private static JPanel boardCentre = new JPanel(new BorderLayout());
-    private static JFrame frame = new JFrame("UNO Card Game | OFFLINE");
-    private static JPanel playedCardSection = new JPanel();
+    final private static JPanel board = new JPanel(new BorderLayout());
+    final private static JPanel boardCentre = new JPanel(new BorderLayout());
+    final private static JFrame frame = new JFrame("UNO Card Game | OFFLINE");
+    final private static JPanel playedCardSection = new JPanel();
+    private static Player nextPlayer;
+    private static JLabel playDeckRem = new JLabel();
 
     private static UNO instance;
 
@@ -71,10 +74,9 @@ public class UNO {
         frame.setLayout(new BorderLayout());
 
         /**
-         * playdeck properties
+         * play deck properties
          *
          */
-        JLabel playDeckRem = new JLabel("Playing Deck - Cards Remaining: 93");
         playDeckRem.setHorizontalAlignment(JLabel.CENTER);
         board.add(playDeckRem, BorderLayout.WEST);
 
@@ -100,39 +102,39 @@ public class UNO {
     }
 
     /**
-     * Adds a new player
-     * @param player player to add
+     * Adds new players
+     * @param newPlayers player to add
+     * @see Player Player
      */
-    public static void createPlayer(Player player) {
-        if (player1 == null) {
-            player1 = player;
-            board.add(player1, BorderLayout.SOUTH);
-            numberOfPlayers++;
-            players.add(player1);
-            refresh();
+    public static void addPlayers(Player[] newPlayers) {
+        for (Player player :
+                newPlayers) {
+            if (player1 == null) {
+                player1 = player;
+                board.add(player1, BorderLayout.SOUTH);
+                numberOfPlayers++;
+                players.add(player1);
+                refresh();
+            } else if (player2 == null) {
+                player2 = player;
+                board.add(player2, BorderLayout.NORTH);
+                numberOfPlayers++;
+                players.add(player2);
+                refresh();
+            }/* else if (player3 == null) {
+                player3 = player;
+                board.add(player3, BorderLayout.WEST);
+                numberOfPlayers++;
+                players.add(player3);
+                refresh();
+            } else if (player4 == null) {
+                player4 = player;
+                board.add(player4, BorderLayout.EAST);
+                numberOfPlayers++;
+                players.add(player4);
+                refresh();
+            }*/
         }
-        else if (player2 == null) {
-            player2 = player;
-            board.add(player2, BorderLayout.NORTH);
-            numberOfPlayers++;
-            players.add(player2);
-            refresh();
-        }
-        /*else if (player3 == null) {
-            player3 = player;
-            board.add(player3, BorderLayout.NORTH);
-            numberOfPlayers++;
-            players.add(player3);
-            refresh();
-        }
-        else if (player4 == null) {
-            player4 = player;
-            board.add(player4, BorderLayout.EAST);
-            numberOfPlayers++;
-            System.out.println(numberOfPlayers);
-            players.add(player4);
-            refresh();
-        }*/
         //add(new JOptionPane("Game is full!", JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION));
         refresh();
     }
@@ -143,15 +145,18 @@ public class UNO {
     public static void start(){
         shuffleShareCards(7);
         playedCards.push(playDeck.pop());
+        cardStackCount = playDeck.size();
         updateBoard();
         updatePlayedCard();
     }
 
     /**
      * Update board GUI
-     * @TODO: 4/21/2021 Implement
+     * @ TODO: 4/21/2021 Implement
      */
-    private static void updateBoard(){
+    public static void updateBoard(){
+
+        playDeckRem.setText("Playing Deck - Cards Remaining: " + cardStackCount) ;
     }
 
     /**
@@ -191,11 +196,12 @@ public class UNO {
     public static void shuffleShareCards(int cardsPerPlayer) {
         playDeck = new CardDeck().createPlayDeck();
         for (int i = 0; i < numberOfPlayers; i++) {
-            for (int j = 0; j < 7; j++) {
+            for (int j = 0; j < cardsPerPlayer; j++) {
                 Card newCard = playDeck.pop();
                 newCard.setPlayer(players.get(i));
                 players.get(i).addCard(newCard);
                 refresh();
+                updateBoard();
             }
         }
     }
@@ -288,6 +294,52 @@ public class UNO {
 
     public static void winRound(Player player){
         player.incrementScore();
-        frame.add(new JOptionPane(player.getName() + " won the round!", JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION));
+        JOptionPane.showMessageDialog(null, player.getName() + " won the round!",
+                 "Round Won", JOptionPane.INFORMATION_MESSAGE);
+        int option = JOptionPane.showConfirmDialog(null, "Wanna Play Another Round?", "Continue Match",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (option == 1){ //no
+            endMatch();
+        }
+        else{ //yes
+            nextRound();
+        }
+    }
+
+    public static void makePlay(Player player, Card card){
+        player.removeCard(card);
+        nextPlayer = player;
+        playedCards.add(card);
+        playedCardSection.remove(playedCard);
+
+
+
+        updateBoard();
+        updatePlayedCard();
+    }
+
+    public static void endMatch(){
+        int optiom = JOptionPane.showConfirmDialog(null, "Start New Match?", "New Game", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+        if(optiom == 1){ //no
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        }else{//yes
+            addPlayers(createPlayers());
+        }
+    }
+
+    public static Player[] createPlayers(){
+        String player1Name = JOptionPane.showInputDialog(null, "Enter Player Name: ", JOptionPane.INFORMATION_MESSAGE);
+        String player2Name = JOptionPane.showInputDialog(null, "Enter Player Name: ", JOptionPane.INFORMATION_MESSAGE);
+        return new Player[]{new Player(player1Name, Color.cyan), new Player(player2Name, Color.ORANGE)};
+    }
+    public static void nextRound(){
+        for (Player player:
+             players) {
+            player.getCards().clear();
+        }
+        start();
     }
 }

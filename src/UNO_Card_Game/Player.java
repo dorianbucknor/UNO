@@ -2,8 +2,6 @@ package UNO_Card_Game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 
@@ -12,13 +10,13 @@ public class Player extends JPanel {
     private String name;
     //private CardHolder cardHolder;
     private Color playerColor;
-    private JPanel playerInfoBar = new JPanel(new GridLayout(1, 5));
-    private JLabel playerNameTag = new JLabel();
-    private JLabel cardCountLbl = new JLabel();
-    private JLabel scoreLbl = new JLabel();
-    private JButton UNOBtn = new JButton("UNO");
-    private JButton drawBtn = new JButton("Draw Card");
-    private JPanel cardHolder = new JPanel();
+    final private JPanel playerInfoBar = new JPanel(new GridLayout(1, 5));
+    final private JLabel playerNameTag = new JLabel();
+    final private JLabel cardCountLbl = new JLabel();
+    final private JLabel scoreLbl = new JLabel();
+    final private JButton UNOBtn = new JButton("UNO");
+    final private JButton drawBtn = new JButton("Draw Card");
+    final private JPanel cardHolder = new JPanel();
     protected ArrayList<Card> cards ;
     protected int numberOfCards;
 
@@ -86,15 +84,12 @@ public class Player extends JPanel {
         drawBtn.setForeground(Color.BLACK);
         drawBtn.setVisible(true);
         drawBtn.setEnabled(false);
-        drawBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    drawCard();
-                } catch (EmptyStackException ex) {
-                    ex.printStackTrace();
-                    drawBtn.setEnabled(false);
-                }
+        drawBtn.addActionListener(e -> {
+            try {
+                drawCard();
+            } catch (EmptyStackException ex) {
+                ex.printStackTrace();
+                drawBtn.setEnabled(false);
             }
         });
         playerInfoBar.add(drawBtn);
@@ -105,9 +100,7 @@ public class Player extends JPanel {
         UNOBtn.setForeground(Color.BLACK);
         UNOBtn.setEnabled(canUNO());
         UNOBtn.setVisible(true);
-        UNOBtn.addActionListener( (e) -> {
-                UNO.winRound(this);
-        });
+        UNOBtn.addActionListener( (e) -> UNO.winRound(this));
         playerInfoBar.add(UNOBtn);
 
         /**
@@ -209,6 +202,7 @@ public class Player extends JPanel {
         Card newCard = UNO.getPlayDeck().pop();
         newCard.setPlayer(this);
         addCard(newCard);
+        UNO.updateBoard();
     }
 
     /**
@@ -241,7 +235,7 @@ public class Player extends JPanel {
     public int cardIndex(Color color, int number){
         int indexOfCard = -1;
 
-        for (int i = cards.size(); i > 0 ; i--) {
+        for (int i = cards.size() - 1; i > 0 ; i--) {
             if(cards.get(i).getNumber() == number && cards.get(i).getColor() == color ){
                 indexOfCard = i;
             }

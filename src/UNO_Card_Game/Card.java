@@ -4,9 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Objects;
 
@@ -15,6 +12,7 @@ public class Card extends JPanel {
     private int number;
     private String action;
     private boolean isActionCard = false;
+    private boolean isWildCard = false;
     private boolean canPlay = false;
     private Player player;
 
@@ -45,8 +43,14 @@ public class Card extends JPanel {
      */
     Card(Color color, String action) {
         this.color = color;
-        this.action = action;
-        isActionCard = true;
+        this.action = action.toLowerCase().strip();
+
+        if(this.action.equals("skip") || this.action.equals("reverse") || this.action.equals("+2")) {
+            isActionCard = true;
+        }else{
+            isWildCard = true;
+        }
+
         createCardGFX();
     }
 
@@ -119,15 +123,12 @@ public class Card extends JPanel {
          * Adds action listener to button to listen for button click
          * @see java.awt.event.ActionListener ActionListener
          */
-        playCardBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    playCard(e);
-                } catch (EmptyStackException ex) {
-                    ex.printStackTrace();
-                    playCardBtn.setEnabled(false);
-                }
+        playCardBtn.addActionListener(e -> {
+            try {
+                playCard(e);
+            } catch (EmptyStackException ex) {
+                ex.printStackTrace();
+                playCardBtn.setEnabled(false);
             }
         });
         unoLbl.add(playCardBtn, BorderLayout.SOUTH);
@@ -140,8 +141,8 @@ public class Card extends JPanel {
      */
     private void playCard(ActionEvent e) {
         if (player == null) return;
-        if (UNO.getPlayedCards().peek().getColor() == this.color || UNO.getPlayedCards().peek().getNumber() == this.number) {
-            player.removeCard(this);
+        if (UNO.getPlayedCards().peek().getColor() == this.color || UNO.getPlayedCards().peek().getNumber() == this.number || isActionCard) {
+            UNO.makePlay(player, this);
         }
     }
 
@@ -198,7 +199,7 @@ public class Card extends JPanel {
 
     /**
      *
-     * @param canPlay
+     * @param canPlay can player make play
      */
     public void setCanPlay(boolean canPlay) {
         this.canPlay = canPlay;
