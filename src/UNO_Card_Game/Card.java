@@ -48,7 +48,7 @@ public class Card extends JPanel {
     }
 
     /**
-     * Creates special card "wild card"
+     * Creates an action card or a wild card
      *
      * @param color      card color
      * @param cardAction card action
@@ -85,7 +85,7 @@ public class Card extends JPanel {
             labelText = Integer.toString(number);
         }
 
-        /**
+        /*
          *Card properties
          */
         setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
@@ -95,7 +95,7 @@ public class Card extends JPanel {
         setLayout(new BorderLayout());
         setVisible(true);
 
-        /**
+        /*
          * Card number or action label at top
          */
         cardLbl1.setText(labelText);
@@ -105,7 +105,7 @@ public class Card extends JPanel {
         cardLbl1.setVisible(true);
         add(cardLbl1, BorderLayout.NORTH);
 
-        /**
+        /*
          * Card number or action label at bottom
          */
         cardLbl2.setText(labelText);
@@ -117,7 +117,7 @@ public class Card extends JPanel {
         add(cardLbl2, BorderLayout.SOUTH);
 
 
-        /**
+        /*
          * UNO_Card_Game Label
          */
         unoLbl.setText("UNO");
@@ -125,7 +125,7 @@ public class Card extends JPanel {
         unoLbl.setLayout(new BorderLayout());
         unoLbl.setVisible(true);
 
-        /**
+        /*
          * Card play button
          */
         playCardBtn.setForeground(Color.BLACK);
@@ -149,7 +149,7 @@ public class Card extends JPanel {
     }
 
     /**
-     * Plays the card and removes card from player's hand
+     * Plays the card
      */
     private void playCard() {
         if (canPlay()) UNO.makePlay(player, this);
@@ -169,18 +169,34 @@ public class Card extends JPanel {
         return color;
     }
 
+    /**
+     * Sets card player
+     * @param player player attached to card
+     * @see Player Player
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+    /**
+     * @return player player attached to card
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * @return action attached to card
+     */
     public CardAction getCardAction() {
         return cardAction;
     }
 
+    /**
+     * Sets card action
+     * @param cardAction action to attach to card
+     * @see CardAction CardAction
+     */
     public void setCardAction(CardAction cardAction) {
         this.cardAction = cardAction;
     }
@@ -199,6 +215,10 @@ public class Card extends JPanel {
         this.number = number;
     }
 
+    /**
+     * Checks if card can be played
+     * @return true if card can be played, false otherwise
+     */
     public boolean canPlay() {
         if (player == null) return false;
 
@@ -207,19 +227,28 @@ public class Card extends JPanel {
         return canPlayNumCard() || canPlayActionCard() || isWildCard || playedCardIsWildCard() ;
     }
 
+    /**
+     * @return true if last played card is a wild card, false otherwise
+     */
     private boolean playedCardIsWildCard() {
-        if (!UNO.getInstance().getPlayedCards().isEmpty()) {
-            return UNO.getInstance().getPlayedCards().peek().isWildCard;
+        if (!UNO.getPlayedCards().isEmpty()) {
+            return UNO.getPlayedCards().peek().isWildCard;
         }
         else {
             return false;
         }
     }
 
+    /**
+     * @return true if action card can be played, false otherwise
+     */
     private boolean canPlayActionCard(){
        return isActionCard && (cardMatchesColor() || cardMatchesAction());
     }
 
+    /**
+     * @return true if this card matches last played card's action
+     */
     private boolean cardMatchesAction() {
         if (!UNO.getInstance().getPlayedCards().isEmpty()) {
             return UNO.getInstance().getPlayedCards().peek().getCardAction() == cardAction;
@@ -229,10 +258,16 @@ public class Card extends JPanel {
         }
     }
 
+    /**
+     * @return true if this number card can be played, false otherwise
+     */
     private boolean canPlayNumCard(){
         return (cardMatchesColor() || cardMatchesNumber()) && !isActionCard;
     }
 
+    /**
+     * @return true if thic card matches last played card's color, false otherwise
+     */
     private boolean cardMatchesColor() {
         if (!UNO.getInstance().getPlayedCards().isEmpty()) {
 
@@ -243,6 +278,9 @@ public class Card extends JPanel {
         }
     }
 
+    /**
+     * @return true if this card's number matches last played card's number
+     */
     private boolean cardMatchesNumber() {
         if (!UNO.getInstance().getPlayedCards().isEmpty()) {
             return UNO.getInstance().getPlayedCards().peek().getNumber() == number;
@@ -252,18 +290,32 @@ public class Card extends JPanel {
         }
     }
 
+    /**
+     * @return if card is action card
+     */
     public boolean isActionCard() {
         return isActionCard;
     }
 
+    /**
+     * @return if card is wild card
+     */
     public boolean isWildCard() {
         return isWildCard;
     }
 
+    /**
+     * Updates card
+     */
     public void updateCard() {
         playCardBtn.setEnabled(canPlay());
     }
 
+    /**
+     * helper functions
+     * @param o Card
+     * @return if this card is equal to o
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -277,6 +329,9 @@ public class Card extends JPanel {
         return Objects.hash(getColor(), getNumber(), isActionCard(), isWildCard(), canPlay, getPlayer(), getCardAction(), playCardBtn, unoLbl, cardLbl2, cardLbl1);
     }
 
+    /**
+     * Enum for storing card actions
+     */
     public enum CardAction {
         PLUS_2("+2"),
         PLUS_4("+4"),

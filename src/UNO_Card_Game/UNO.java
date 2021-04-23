@@ -6,16 +6,13 @@ import java.awt.event.WindowEvent;
 import java.util.Collections;
 import java.util.Stack;
 
-/**
- * @ TODO: 4/21/2021 Revise 4 player options
- */
 
-/**
+/*
  * Singleton Pattern class
  */
 
 public class UNO {
-    private static final JLabel playDeckRem = new JLabel();
+    private static final JLabel numCardsPlayDeck = new JLabel();
     private static Card playedCard = new Card();
     private static int cardStackCount;
     private static Stack<Card> playDeck = null;
@@ -71,8 +68,8 @@ public class UNO {
          * play deck properties
          *
          */
-        playDeckRem.setHorizontalAlignment(JLabel.CENTER);
-        board.add(playDeckRem, BorderLayout.WEST);
+        numCardsPlayDeck.setHorizontalAlignment(JLabel.CENTER);
+        board.add(numCardsPlayDeck, BorderLayout.WEST);
 
         /**
          * board title
@@ -110,7 +107,7 @@ public class UNO {
      */
     public static void updateBoard(){
         cardStackCount = playDeck.size();
-        playDeckRem.setText("Playing Deck - Cards Remaining: " + cardStackCount) ;
+        numCardsPlayDeck.setText("Playing Deck - Cards Remaining: " + cardStackCount) ;
     }
 
     /**
@@ -123,13 +120,12 @@ public class UNO {
     /**
      * Update last played card
      */
-    public static Card updatePlayedCard(){
+    public static void updatePlayedCard(){
         playedCardSection.removeAll();
         playedCard = playedCards.peek();
         playedCardSection.add(playedCard, BorderLayout.CENTER);
         playedCardSection.validate();
         playedCardSection.repaint();
-        return playedCard;
     }
 
     /**
@@ -194,8 +190,8 @@ public class UNO {
     }
 
     /**
-     *
-     * @param player
+     * Win a round
+     * @param player player that won the round
      */
     public static void winRound(Player player){
         player.incrementScore();
@@ -206,7 +202,7 @@ public class UNO {
                 JOptionPane.QUESTION_MESSAGE);
 
         if (option == 1){ //no
-            endMatch();
+            endGame();
         }
         else{ //yes
             nextRound();
@@ -214,9 +210,9 @@ public class UNO {
     }
 
     /**
-     *
-     * @param player
-     * @param card
+     * Makes a play
+     * @param player player that made the play
+     * @param card card player played
      */
     public static void makePlay(Player player, Card card){
         card.setPlayer(null);
@@ -248,13 +244,12 @@ public class UNO {
         updateBoard();
         updatePlayedCard();
         updatePlayers();
-        System.out.println("love");
     }
 
     /**
-     *
+     *Ends and closes game
      */
-    public static void endMatch(){
+    public static void endGame(){
         int optiom = JOptionPane.showConfirmDialog(null, "Start New Match?", "New Game", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
         if(optiom == 1){ //no
@@ -267,6 +262,10 @@ public class UNO {
             start();
         }
     }
+
+    /**
+     * Update players and their UI
+     */
     public static void updatePlayers(){
         players.updatePlayerTurn();
         for (Player player:
@@ -276,17 +275,19 @@ public class UNO {
     }
 
     /**
-     *
-     * @return
+     * @return Player array containing created players
+     * @see Player Player
      */
     public static Player[] createPlayers(){
-        String player1Name = JOptionPane.showInputDialog(null, "Enter Player Name: ", JOptionPane.INFORMATION_MESSAGE);
-        String player2Name = JOptionPane.showInputDialog(null, "Enter Player Name: ", JOptionPane.INFORMATION_MESSAGE);
+        String player1Name = JOptionPane.showInputDialog(null, "Enter Player 1 Name: ",
+                JOptionPane.INFORMATION_MESSAGE);
+        String player2Name = JOptionPane.showInputDialog(null, "Enter Player 2 Name: ",
+                JOptionPane.INFORMATION_MESSAGE);
         return new Player[]{new Player(player1Name, Color.cyan), new Player(player2Name, Color.ORANGE)};
     }
 
     /**
-     *
+     *Start next round
      */
     public static void nextRound(){
         players.resetCards();
@@ -294,20 +295,40 @@ public class UNO {
         start();
     }
 
+    /**
+     * @return game board
+     */
     public static JPanel getBoard() {
         return board;
     }
+
+    /**
+     * @return frame
+     * @see JFrame JFrame
+     */
     public static JFrame getFrame() {
         return frame;
     }
+
+    /**
+     * @return card that was last played
+     */
     public static Card getPlayedCard() {
         return playedCard;
     }
-    public static JLabel getPlayDeckRem() {
-        return playDeckRem;
+
+    /**
+     * @return number of cards in play deck
+     */
+    public static JLabel getNumCardsPlayDeck() {
+        return numCardsPlayDeck;
     }
 
-    public static Players getPlayers() {
+    /**
+     * @return players object
+     * @see Players Players
+     */
+    public static Players Players() {
         return players;
     }
 }

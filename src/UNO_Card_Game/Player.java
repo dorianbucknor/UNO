@@ -8,7 +8,6 @@ import java.util.EmptyStackException;
 public class Player extends JPanel {
     private int score;
     private String name;
-    //private CardHolder cardHolder;
     private Color playerColor;
     final private JPanel playerInfoBar = new JPanel(new GridLayout(1, 5));
     final private JLabel playerNameTag = new JLabel();
@@ -40,7 +39,7 @@ public class Player extends JPanel {
      * Create UI for player
      */
     private void createPlayerGFX() {
-        /**
+        /*
          * Player panel properties
          */
         setVisible(true);
@@ -48,13 +47,13 @@ public class Player extends JPanel {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(playerColor, 2, true));
 
-        /**
+        /*
          * Player info
          */
         playerInfoBar.setVisible(true);
         playerInfoBar.setPreferredSize(new Dimension(700,30));
 
-        /**
+        /*
          * Player name
          */
         playerNameTag.setText("Player: " + name);
@@ -62,7 +61,7 @@ public class Player extends JPanel {
         playerNameTag.setBorder(BorderFactory.createLineBorder(Color.GREEN,2, true));
         playerInfoBar.add(playerNameTag);
 
-        /**
+        /*
          * Card count
          */
         cardCountLbl.setText("# of Cards: " + (numberOfCards));
@@ -71,7 +70,7 @@ public class Player extends JPanel {
         cardCountLbl.setVisible(true);
         playerInfoBar.add(cardCountLbl);
 
-        /**
+        /*
          * Player score
          */
         scoreLbl.setText("Score: " + score);
@@ -80,7 +79,7 @@ public class Player extends JPanel {
         scoreLbl.setVisible(true);
         playerInfoBar.add(scoreLbl);
 
-        /**
+        /*
          * Draw button
          */
         drawBtn.setForeground(Color.BLACK);
@@ -96,7 +95,7 @@ public class Player extends JPanel {
         });
         playerInfoBar.add(drawBtn);
 
-        /**
+        /*
          * UNO Button
          */
         UNOBtn.setForeground(Color.BLACK);
@@ -105,7 +104,7 @@ public class Player extends JPanel {
         UNOBtn.addActionListener( (e) -> UNO.winRound(this));
         playerInfoBar.add(UNOBtn);
 
-        /**
+        /*
          * displays player cards
          */
         cardHolder.setPreferredSize(new Dimension(490,180));
@@ -118,13 +117,8 @@ public class Player extends JPanel {
     }
 
     /**
-     * @// TODO: 4/21/2021 revise cardholder options !!!
-     * @return card holder containing all cards player has
+     * @return player's cardholder
      */
-//     public CardHolder getCardHolder() {
-//        return cardHolder;
-//     }
-
     public JPanel getCardHolder() {
         return cardHolder;
     }
@@ -134,7 +128,7 @@ public class Player extends JPanel {
      * @return true if player can call UNO, false otherwise
      */
     public boolean canUNO(){
-        return getNumberOfCards() <= 1;
+        return numberOfCards <= 1;
     }
 
     /**
@@ -159,15 +153,7 @@ public class Player extends JPanel {
     }
 
     /**
-     * @ TODO: 4/21/2021 Revise cardholder options!!!
-     * @param cardHolder set the player's hand
-     */
-    //public void setCardHolder(CardHolder cardHolder) {
-   //     this.cardHolder = cardHolder;
-   // }
-
-    /**
-     *Update player name
+     *Sets player name
      * @param name set player name
      */
     public void setName(String name) {
@@ -176,7 +162,7 @@ public class Player extends JPanel {
     }
 
     /**
-     *Update player score
+     *Sets player score
      * @param score set player score
      */
     public void setScore(int score) {
@@ -185,7 +171,7 @@ public class Player extends JPanel {
     }
 
     /**
-     *Change player color
+     *Sets player color
      * @param playerColor set player color
      */
     public void setPlayerColor(Color playerColor) {
@@ -312,7 +298,7 @@ public class Player extends JPanel {
     }
 
     /**
-     *
+     *Updates cards
      */
     public void updateCardHolder(){
         for (Card card :
@@ -323,15 +309,25 @@ public class Player extends JPanel {
         }
     }
 
+    /**
+     * Sets number of cards in cardholder
+     * @param numberOfCards
+     */
     public void setNumberOfCards(int numberOfCards) {
         this.numberOfCards = numberOfCards;
     }
 
-
+    /**
+     * Sets this player's turn
+     * @param playerTurn
+     */
     public void setPlayerTurn(boolean playerTurn) {
         isPlayerTurn = playerTurn;
     }
 
+    /**
+     * @return true if its thisplayer's turn, false otherwise
+     */
     public boolean isPlayerTurn() {
         return isPlayerTurn;
     }

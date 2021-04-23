@@ -44,6 +44,10 @@ public class Players {
         updatePlayerTurn();
     }
 
+    /**
+     * Adds 4 cards to players card holder
+     * @param playDeck
+     */
     public void add4(Stack<Card> playDeck) {
         addCards(nextPlayer, 4, playDeck);
     }
@@ -60,15 +64,25 @@ public class Players {
         updatePlayerTurn();
     }
 
+    /**
+     *Adds 4 cards to players card holder
+     * @param playDeck
+     */
     public void add2(Stack<Card> playDeck) {
         addCards(nextPlayer, 2, playDeck);
     }
 
+    /**
+     * Skip action
+     */
     public void skip() {
         Collections.rotate(playOrder, 2);
         updatePlayerTurn();
     }
 
+    /**
+     * Reverse action
+     */
     public void reverse() {
         Collections.reverse(playOrder);
         updatePlayerTurn();
@@ -109,31 +123,54 @@ public class Players {
         return numberOfPlayers;
     }
 
+    /**
+     * Sets next player
+     * @param nextPlayer
+     */
     public void setNextPlayer(Player nextPlayer) {
         this.nextPlayer = nextPlayer;
     }
 
+    /**
+     * Sets current player
+     * @param currentPlayer
+     */
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
+    /**
+     * Sets previous player
+     * @param previousPlayer
+     */
     public void setPreviousPlayer(Player previousPlayer) {
         this.previousPlayer = previousPlayer;
     }
 
+    /**
+     * Gives next player the ability to play
+     */
     public void nextPlayerTurn() {
         Collections.rotate(playOrder, 1);
     }
 
-
+    /**
+     * @return current player
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * @return next player
+     */
     public Player getNextPlayer() {
         return nextPlayer;
     }
 
+    /**
+     * @return previous player
+     */
     public Player getPreviousPlayer() {
         return previousPlayer;
     }
@@ -146,6 +183,9 @@ public class Players {
         return player1;
     }
 
+    /**
+     * Resets all player cards
+     */
     public void resetCards() {
         for (Player player :
                 allPlayers) {
@@ -163,6 +203,9 @@ public class Players {
         return player2;
     }
 
+    /**
+     * Updates current player, next player and previous player
+     */
     public void updatePlayerTurn() {
         nextPlayer = playOrder.get(1);
 
@@ -176,6 +219,9 @@ public class Players {
         updatePlayerCards();
     }
 
+    /**
+     * update all player cards
+     */
     public void updatePlayerCards() {
         for (Player player :
                 allPlayers) {
@@ -186,7 +232,11 @@ public class Players {
         }
     }
 
+    /**
+     * Reset playing order
+     */
     public void resetPlayOrder() {
         playOrder = allPlayers;
+        updatePlayerTurn();
     }
 }
