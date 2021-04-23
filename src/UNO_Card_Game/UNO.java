@@ -3,7 +3,6 @@ package UNO_Card_Game;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
@@ -16,30 +15,25 @@ import java.util.Stack;
  */
 
 public class UNO {
-   private static Player player1;
-    private static Player player2;
-//    private static Player player3;
-//    private static Player player4;
-     private static ArrayList<Player> players = new ArrayList<>(4);
-    private static int numberOfPlayers = 0;
+    private static final JLabel playDeckRem = new JLabel();
     private static Card playedCard = new Card();
     private static int cardStackCount;
     private static Stack<Card> playDeck = null;
     private static Stack<Card> playedCards = new Stack<>();
-
      private static JPanel board = new JPanel(new BorderLayout());
      private static JPanel boardCentre = new JPanel(new BorderLayout());
      private static JFrame frame = new JFrame("UNO Card Game | OFFLINE");
     private static JPanel playedCardSection = new JPanel(new BorderLayout());
-    private static Player nextPlayer;
-    private static final JLabel playDeckRem = new JLabel();
+    private static Players players = new Players();
 
     private static UNO instance;
 
     /**
      * Private empty constructor - IMPORTANT
      */
-    private UNO(){}
+    private UNO(){
+        //Yes. Just an empty constructor
+    }
 
     /**
      * @return instance of UNO
@@ -102,60 +96,19 @@ public class UNO {
     }
 
     /**
-     * Adds new players
-     * @param newPlayers player to add
-     * @see Player Player
-     */
-    public static void addPlayers(Player[] newPlayers) {
-        for (Player player :
-                newPlayers) {
-            if (player1 == null) {
-                player1 = player;
-                board.add(player1, BorderLayout.SOUTH);
-                numberOfPlayers++;
-                players.add(player1);
-                refresh();
-            } else if (player2 == null) {
-                player2 = player;
-                board.add(player2, BorderLayout.NORTH);
-                numberOfPlayers++;
-                players.add(player2);
-                refresh();
-            }/* else if (player3 == null) {
-                player3 = player;
-                board.add(player3, BorderLayout.WEST);
-                numberOfPlayers++;
-                players.add(player3);
-                refresh();
-            } else if (player4 == null) {
-                player4 = player;
-                board.add(player4, BorderLayout.EAST);
-                numberOfPlayers++;
-                players.add(player4);
-                refresh();
-            }*/
-        }
-        //add(new JOptionPane("Game is full!", JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION));
-        refresh();
-    }
-
-    /**
      * Starts game
      */
     public static void start(){
         shuffleShareCards(7);
-        playedCards.push(playDeck.pop());
-        cardStackCount = playDeck.size();
         updateBoard();
         updatePlayedCard();
+        updatePlayers();
     }
 
     /**
      * Update board GUI
-     * @ TODO: 4/21/2021 Implement
      */
     public static void updateBoard(){
-        //nextPlayer = players.
         cardStackCount = playDeck.size();
         playDeckRem.setText("Playing Deck - Cards Remaining: " + cardStackCount) ;
     }
@@ -170,13 +123,13 @@ public class UNO {
     /**
      * Update last played card
      */
-    private static void updatePlayedCard(){
+    public static Card updatePlayedCard(){
         playedCardSection.removeAll();
         playedCard = playedCards.peek();
-        playedCard.setCanPlay(false);
         playedCardSection.add(playedCard, BorderLayout.CENTER);
         playedCardSection.validate();
         playedCardSection.repaint();
+        return playedCard;
     }
 
     /**
@@ -199,16 +152,24 @@ public class UNO {
      */
     public static void shuffleShareCards(int cardsPerPlayer) {
         playDeck = new CardDeck().createPlayDeck();
-        for (int i = 0; i < numberOfPlayers; i++) {
+        Card startCard = playDeck.pop();
+        while (startCard.isWildCard()){
+            startCard = playDeck.pop();
+        }
+        playedCards.push(startCard);
+        cardStackCount = playDeck.size();
+
+        for (int i = 0; i < players.getNumberOfPlayers(); i++) {
             for (int j = 0; j < cardsPerPlayer; j++) {
                 Card newCard = playDeck.pop();
-                newCard.setPlayer(players.get(i));
-                players.get(i).addCard(newCard);
+                newCard.setPlayer(players.getAllPlayers().get(i));
+                players.getAllPlayers().get(i).addCard(newCard);
                 refresh();
                 updateBoard();
             }
         }
     }
+
 
     /**
      * @return playing deck
@@ -224,38 +185,7 @@ public class UNO {
         return cardStackCount;
     }
 
-    /**
-     *
-     * @return number of players in round/match
-     */
-    public static int getNumberOfPlayers() {
-        return numberOfPlayers;
-    }
-
-    /**
-     * @return player 1
-     * @see Player Player
-     */
-    public static Player getPlayer1() {
-        return player1;
-    }
-    /**
-     * @return player 2
-     * @see Player Player
-     */
-    public static Player getPlayer2() {
-        return player2;
-    }
-/*
-    public static Player getPlayer3() {
-        return player3;
-    }
-
-    public static Player getPlayer4() {
-        return player4;
-    }*/
-
-    /**
+   /**
      * @return list of  cards that have been played
      * @see java.util.Stack Stack
      */
@@ -264,38 +194,9 @@ public class UNO {
     }
 
     /**
-     * Set player 1
-     * @param player player to set
-     * @see Player Player
+     *
+     * @param player
      */
-    public static void setPlayer1(Player player) {
-        player1 = player;
-    }
-
-    /**
-     * Set player 2
-     * @param player player to set
-     * @see Player Player
-     */
-    public static void setPlayer2(Player player) {
-        player2 = player;
-    }
-
-   /* public static void setPlayer3(Player player) {
-        player3 = player;
-    }
-    public static void setPlayer4(Player player) {
-        player4 = player;
-    }*/
-
-    /**
-     * @return list of players in round.match
-     * @see java.util.ArrayList ArrayList
-     */
-    public static ArrayList<Player> getPlayers() {
-        return players;
-    }
-
     public static void winRound(Player player){
         player.incrementScore();
         JOptionPane.showMessageDialog(null, player.getName() + " won the round!",
@@ -312,37 +213,101 @@ public class UNO {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param card
+     */
     public static void makePlay(Player player, Card card){
+        card.setPlayer(null);
+        card.updateCard();
         player.removeCard(card);
-        nextPlayer = player;
         playedCards.add(card);
         playedCardSection.remove(playedCard);
+
+        if(card.isActionCard() || card.isWildCard()){
+            switch (card.getCardAction()){
+                case REVERSE:
+                    players.reverse();
+                    break;
+                case SKIP:
+                    players.skip();
+                    break;
+                case PLUS_2:
+                    players.add2(playDeck);
+                    break;
+                case PLUS_4:
+                    players.add4(playDeck);
+                    break;
+                default:
+                    break;
+            }
+        }else{
+         players.nextPlayerTurn();
+        }
         updateBoard();
         updatePlayedCard();
+        updatePlayers();
+        System.out.println("love");
     }
 
+    /**
+     *
+     */
     public static void endMatch(){
         int optiom = JOptionPane.showConfirmDialog(null, "Start New Match?", "New Game", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
         if(optiom == 1){ //no
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
         }else{//yes
-            addPlayers(createPlayers());
+            players.resetCards();
+            players.getAllPlayers().clear();
+            players.addPlayers(createPlayers());
+            players.resetPlayOrder();
+            start();
+        }
+    }
+    public static void updatePlayers(){
+        players.updatePlayerTurn();
+        for (Player player:
+             players.getAllPlayers()) {
+            player.updatePlayerUI();
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public static Player[] createPlayers(){
         String player1Name = JOptionPane.showInputDialog(null, "Enter Player Name: ", JOptionPane.INFORMATION_MESSAGE);
         String player2Name = JOptionPane.showInputDialog(null, "Enter Player Name: ", JOptionPane.INFORMATION_MESSAGE);
         return new Player[]{new Player(player1Name, Color.cyan), new Player(player2Name, Color.ORANGE)};
     }
+
+    /**
+     *
+     */
     public static void nextRound(){
-        for (Player player:
-             players) {
-            player.getCards().clear();
-            player.getCardHolder().removeAll();
-            //player.updatePlayerUI();
-        }
+        players.resetCards();
+        players.resetPlayOrder();
         start();
+    }
+
+    public static JPanel getBoard() {
+        return board;
+    }
+    public static JFrame getFrame() {
+        return frame;
+    }
+    public static Card getPlayedCard() {
+        return playedCard;
+    }
+    public static JLabel getPlayDeckRem() {
+        return playDeckRem;
+    }
+
+    public static Players getPlayers() {
+        return players;
     }
 }

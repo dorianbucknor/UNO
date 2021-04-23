@@ -5,11 +5,8 @@ import java.awt.*;
 public class Main{
 
     public static void main(String[] args) {
-
-
         UNO.run();
-        UNO.addPlayers(UNO.createPlayers());
+        UNO.getPlayers().addPlayers(UNO.createPlayers());
         UNO.start();
-
     }
 }

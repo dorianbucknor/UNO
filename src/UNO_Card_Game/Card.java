@@ -8,11 +8,17 @@ import java.util.Objects;
 public class Card extends JPanel {
     private Color color;
     private int number;
-    private String action;
-    private boolean isActionCard = false;
-    private boolean isWildCard = false;
-    private boolean canPlay = false;
+    // private String action;
+    private boolean isActionCard;
+    private boolean isWildCard;
+    private boolean canPlay;
     private Player player;
+    private CardAction cardAction;
+    private JButton playCardBtn = new JButton("Play Card");
+    private JLabel unoLbl = new JLabel();
+    private JLabel cardLbl2 = new JLabel();
+    private JLabel cardLbl1 = new JLabel();
+
 
     /**
      * Default Constructor
@@ -20,32 +26,44 @@ public class Card extends JPanel {
     Card() {
         color = null;
         number = -1;
+        canPlay = false;
+        isWildCard = false;
+        isActionCard = false;
         createCardGFX();
     }
 
     /**
      * Creates a normal card
-     * @param color card color
+     *
+     * @param color  card color
      * @param number card number
      */
     Card(Color color, int number) {
         this.color = color;
         this.number = number;
+        canPlay = false;
+        isWildCard = false;
+        isActionCard = false;
         createCardGFX();
     }
 
     /**
      * Creates special card "wild card"
-     * @param color card color
-     * @param action card action - "+4, reverse, change color"
+     *
+     * @param color      card color
+     * @param cardAction card action
+     * @see CardAction CardAction
      */
-    Card(Color color, String action) {
-        this.color = color;
-        this.action = action.toLowerCase().strip();
 
-        if(this.action.equals("skip") || this.action.equals("reverse") || this.action.equals("+2")) {
+    Card(Color color, CardAction cardAction) {
+        this.color = color;
+        //this.action = cardAction.action;
+        this.cardAction = cardAction;
+        canPlay = false;
+
+        if (this.cardAction.equals(CardAction.SKIP) || this.cardAction.equals(CardAction.REVERSE) || this.cardAction.equals(CardAction.PLUS_2)) {
             isActionCard = true;
-        }else{
+        } else {
             isWildCard = true;
         }
 
@@ -54,15 +72,16 @@ public class Card extends JPanel {
 
     /**
      * Creates card graphics
+     *
      * @see java.awt.Color for color
      */
     private void createCardGFX() {
 
         String labelText;
 
-        if (isActionCard || isWildCard){
-            labelText = action;
-        }else{
+        if (isActionCard || isWildCard) {
+            labelText = cardAction.action;
+        } else {
             labelText = Integer.toString(number);
         }
 
@@ -70,8 +89,8 @@ public class Card extends JPanel {
          *Card properties
          */
         setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
-        setPreferredSize(new Dimension(180,200));
-        setMaximumSize(new Dimension(180,200));
+        setPreferredSize(new Dimension(180, 200));
+        setMaximumSize(new Dimension(180, 200));
         setBackground(Color.white);
         setLayout(new BorderLayout());
         setVisible(true);
@@ -79,31 +98,28 @@ public class Card extends JPanel {
         /**
          * Card number or action label at top
          */
-        JLabel cardLbl1 = new JLabel();
         cardLbl1.setText(labelText);
         cardLbl1.setBackground(color);
         cardLbl1.setForeground(color == Color.yellow || color == Color.green ? Color.BLACK : Color.WHITE);
         cardLbl1.setOpaque(true);
         cardLbl1.setVisible(true);
-        add(cardLbl1,  BorderLayout.NORTH);
+        add(cardLbl1, BorderLayout.NORTH);
 
         /**
          * Card number or action label at bottom
          */
-        JLabel cardLbl2 = new JLabel();
         cardLbl2.setText(labelText);
         cardLbl2.setBackground(color);
         cardLbl2.setForeground(color == Color.yellow || color == Color.green ? Color.BLACK : Color.WHITE);
         cardLbl2.setHorizontalAlignment(JLabel.RIGHT);
         cardLbl2.setOpaque(true);
         cardLbl2.setVisible(true);
-        add(cardLbl2,BorderLayout.SOUTH);
+        add(cardLbl2, BorderLayout.SOUTH);
 
 
         /**
          * UNO_Card_Game Label
          */
-        JLabel unoLbl = new JLabel();
         unoLbl.setText("UNO");
         unoLbl.setHorizontalAlignment(JLabel.CENTER);
         unoLbl.setLayout(new BorderLayout());
@@ -112,10 +128,10 @@ public class Card extends JPanel {
         /**
          * Card play button
          */
-        JButton playCardBtn = new JButton("Play Card");
         playCardBtn.setForeground(Color.BLACK);
         playCardBtn.setVisible(true);
-        add(unoLbl,BorderLayout.CENTER);
+        playCardBtn.setEnabled(canPlay());
+        add(unoLbl, BorderLayout.CENTER);
 
         /**
          * Adds action listener to button to listen for button click
@@ -136,10 +152,7 @@ public class Card extends JPanel {
      * Plays the card and removes card from player's hand
      */
     private void playCard() {
-        if (player == null) return;
-        if (UNO.getPlayedCards().peek().getColor() == this.color || UNO.getPlayedCards().peek().getNumber() == this.number || isActionCard) {
-            UNO.makePlay(player, this);
-        }
+        if (canPlay()) UNO.makePlay(player, this);
     }
 
     /**
@@ -164,19 +177,12 @@ public class Card extends JPanel {
         return player;
     }
 
-    /**
-     * Sets the action of the card
-     * @param action the action of the card
-     */
-    public void setAction(String action) {
-        this.action = action;
+    public CardAction getCardAction() {
+        return cardAction;
     }
 
-    /**
-     * @return card's action if car is an action card
-     */
-    public String getAction() {
-        return isActionCard ? action : "Not an Action card";
+    public void setCardAction(CardAction cardAction) {
+        this.cardAction = cardAction;
     }
 
     /**
@@ -193,29 +199,95 @@ public class Card extends JPanel {
         this.number = number;
     }
 
-    /**
-     *
-     * @param canPlay can player make play
-     */
-    public void setCanPlay(boolean canPlay) {
-        this.canPlay = canPlay;
+    public boolean canPlay() {
+        if (player == null) return false;
+
+        if (!player.isPlayerTurn()) return false;
+
+        return canPlayNumCard() || canPlayActionCard() || isWildCard || playedCardIsWildCard() ;
     }
 
-    /**
-     * Important helper functions
-     * @param o card to check if equal
-     * @return true if cards are equal
-     */
+    private boolean playedCardIsWildCard() {
+        if (!UNO.getInstance().getPlayedCards().isEmpty()) {
+            return UNO.getInstance().getPlayedCards().peek().isWildCard;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private boolean canPlayActionCard(){
+       return isActionCard && (cardMatchesColor() || cardMatchesAction());
+    }
+
+    private boolean cardMatchesAction() {
+        if (!UNO.getInstance().getPlayedCards().isEmpty()) {
+            return UNO.getInstance().getPlayedCards().peek().getCardAction() == cardAction;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private boolean canPlayNumCard(){
+        return (cardMatchesColor() || cardMatchesNumber()) && !isActionCard;
+    }
+
+    private boolean cardMatchesColor() {
+        if (!UNO.getInstance().getPlayedCards().isEmpty()) {
+
+            return UNO.getInstance().getPlayedCards().peek().getColor() == color;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private boolean cardMatchesNumber() {
+        if (!UNO.getInstance().getPlayedCards().isEmpty()) {
+            return UNO.getInstance().getPlayedCards().peek().getNumber() == number;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean isActionCard() {
+        return isActionCard;
+    }
+
+    public boolean isWildCard() {
+        return isWildCard;
+    }
+
+    public void updateCard() {
+        playCardBtn.setEnabled(canPlay());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Card)) return false;
         Card card = (Card) o;
-        return getNumber() == card.getNumber() && isActionCard == card.isActionCard && isWildCard == card.isWildCard && canPlay == card.canPlay && getColor().equals(card.getColor()) && getAction().equals(card.getAction()) && getPlayer().equals(card.getPlayer());
+        return getNumber() == card.getNumber() && isActionCard() == card.isActionCard() && isWildCard() == card.isWildCard() && canPlay == card.canPlay && Objects.equals(getColor(), card.getColor()) && Objects.equals(getPlayer(), card.getPlayer()) && getCardAction() == card.getCardAction() && Objects.equals(playCardBtn, card.playCardBtn) && Objects.equals(unoLbl, card.unoLbl) && Objects.equals(cardLbl2, card.cardLbl2) && Objects.equals(cardLbl1, card.cardLbl1);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getColor(), getNumber(), getAction(), isActionCard, isWildCard, canPlay, getPlayer());
+        return Objects.hash(getColor(), getNumber(), isActionCard(), isWildCard(), canPlay, getPlayer(), getCardAction(), playCardBtn, unoLbl, cardLbl2, cardLbl1);
+    }
+
+    public enum CardAction {
+        PLUS_2("+2"),
+        PLUS_4("+4"),
+        REVERSE("reverse"),
+        SKIP("skip"),
+        CHANGE_COLOR("change-color");
+
+        private String action;
+
+        CardAction(String action) {
+            this.action = action;
+        }
     }
 }

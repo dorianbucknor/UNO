@@ -30,25 +30,25 @@ public class CardDeck {
         fullDeck.put("Yellow0", new Card(Color.green, 0));
 
         for (int i = 1; i < 3; i++) {
-            fullDeck.put("Red+2-"+i, new Card(Color.red, "+2"));
-            fullDeck.put("Blue+2"+i,new Card(Color.blue, "+2"));
-            fullDeck.put("Yellow+2-"+i,new Card(Color.yellow, "+2"));
-            fullDeck.put("Green+2-"+i,new Card(Color.green, "+2"));
+            fullDeck.put("Red+2-"+i, new Card(Color.red, Card.CardAction.PLUS_2));
+            fullDeck.put("Blue+2"+i,new Card(Color.blue, Card.CardAction.PLUS_2));
+            fullDeck.put("Yellow+2-"+i,new Card(Color.yellow, Card.CardAction.PLUS_2));
+            fullDeck.put("Green+2-"+i,new Card(Color.green, Card.CardAction.PLUS_2));
 
-            fullDeck.put("RedReverse-"+i, new Card(Color.red, "reverse"));
-            fullDeck.put("BlueReverse-"+i,new Card(Color.blue, "reverse"));
-            fullDeck.put("YellowReverse"+i,new Card(Color.yellow, "reverse"));
-            fullDeck.put("GreenReverse"+i,new Card(Color.green, "reverse"));
+            fullDeck.put("RedReverse-"+i, new Card(Color.red, Card.CardAction.REVERSE));
+            fullDeck.put("BlueReverse-"+i,new Card(Color.blue, Card.CardAction.REVERSE));
+            fullDeck.put("YellowReverse"+i,new Card(Color.yellow, Card.CardAction.REVERSE));
+            fullDeck.put("GreenReverse"+i,new Card(Color.green, Card.CardAction.REVERSE));
 
-            fullDeck.put("RedSkip-"+i, new Card(Color.red, "skip"));
-            fullDeck.put("BlueSkip-"+i,new Card(Color.blue, "skip"));
-            fullDeck.put("YellowSkip"+i,new Card(Color.yellow, "skip"));
-            fullDeck.put("GreenSkip"+i,new Card(Color.green, "skip"));
+            fullDeck.put("RedSkip-"+i, new Card(Color.red, Card.CardAction.SKIP));
+            fullDeck.put("BlueSkip-"+i,new Card(Color.blue, Card.CardAction.SKIP));
+            fullDeck.put("YellowSkip"+i,new Card(Color.yellow, Card.CardAction.SKIP));
+            fullDeck.put("GreenSkip"+i,new Card(Color.green, Card.CardAction.SKIP));
         }
 
         for (int i = 0; i < 4; i++) {
-            fullDeck.put("Wild+4"+i, new Card(Color.black, "+4"));
-            fullDeck.put("WildChangeColor"+i ,new Card(Color.black, "change-color"));
+            fullDeck.put("Wild+4"+i, new Card(Color.black, Card.CardAction.PLUS_4));
+            fullDeck.put("WildChangeColor"+i ,new Card(Color.black, Card.CardAction.CHANGE_COLOR));
         }
     }
 

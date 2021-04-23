@@ -63,7 +63,7 @@ public class CardHolder extends JPanel  {
     public int cardIndex(Color color, int number){
         int indexOfCard = -1;
 
-        for (int i = cards.size(); i > 0 ; i--) {
+        for (int i = cards.size() - 1; i > 0 ; i--) {
             if(cards.get(i).getNumber() == number && cards.get(i).getColor() == color ){
                 indexOfCard = i;
             }

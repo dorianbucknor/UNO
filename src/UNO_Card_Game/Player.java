@@ -19,6 +19,7 @@ public class Player extends JPanel {
     final private JPanel cardHolder = new JPanel();
     protected ArrayList<Card> cards ;
     protected int numberOfCards;
+    private boolean isPlayerTurn;
 
     /**
      * Creates a new player
@@ -29,6 +30,7 @@ public class Player extends JPanel {
         this.name = name;
         //cardHolder = new CardHolder();
         this.score = 0;
+        isPlayerTurn = false;
         cards = new ArrayList<>(7);
         this.playerColor = playerColor;
         createPlayerGFX();
@@ -132,7 +134,7 @@ public class Player extends JPanel {
      * @return true if player can call UNO, false otherwise
      */
     public boolean canUNO(){
-        return getNumberOfCards() == 1;
+        return getNumberOfCards() <= 1;
     }
 
     /**
@@ -207,6 +209,7 @@ public class Player extends JPanel {
         newCard.setPlayer(this);
         addCard(newCard);
         UNO.updateBoard();
+        UNO.updatePlayers();
     }
 
     /**
@@ -270,7 +273,7 @@ public class Player extends JPanel {
      * @param card card to remove
      */
     public void removeCard(Card card) {
-        cardHolder.removeAll();
+        cardHolder.removeAll(); //container to hold current user cards
        // cardHolder.validate();
 
         for (Card c :
@@ -280,7 +283,6 @@ public class Player extends JPanel {
                 break;
             }
         }
-
         numberOfCards--;
        updatePlayerUI();
     }
@@ -300,7 +302,7 @@ public class Player extends JPanel {
 
         cardCountLbl.setText("# of Cards: " + numberOfCards);
         UNOBtn.setEnabled(canUNO());
-        drawBtn.setEnabled(!UNO.isStackEmpty());
+        drawBtn.setEnabled(!UNO.isStackEmpty() && isPlayerTurn);
         scoreLbl.setText("Score: " + score);
         playerNameTag.setText("Player: " + name);
 
@@ -308,6 +310,10 @@ public class Player extends JPanel {
         repaint();
         UNO.refresh();
     }
+
+    /**
+     *
+     */
     public void updateCardHolder(){
         for (Card card :
                 cards) {
@@ -315,7 +321,19 @@ public class Player extends JPanel {
             cardHolder.validate();
             cardHolder.repaint();
         }
+    }
 
+    public void setNumberOfCards(int numberOfCards) {
+        this.numberOfCards = numberOfCards;
+    }
+
+
+    public void setPlayerTurn(boolean playerTurn) {
+        isPlayerTurn = playerTurn;
+    }
+
+    public boolean isPlayerTurn() {
+        return isPlayerTurn;
     }
 }
 
